@@ -45,16 +45,16 @@ export const updateUser = async (req, res) =>{
 export const deleteUser = async (req, res) =>{
     try{
         const params = req.params;
-        // const {pass} = req.body;
-        // const realPass = User.find(params, "pass");
+        const key = req.body.pass;
+        const {pass} = await User.findOne(params);
 
-        await User.deleteOne(params);
-        // if(pass == realPass){
-        //     await User.deleteOne(params);
-        // }
-        // else{
-        //     res.status(400).send({"pass": realPass});
-        // }
+        if(key == pass){
+            const deleted = await User.deleteOne(params);
+            res.status(200).send(deleted);
+        }
+        else{
+            res.status(400).send({"pass": "Wrong"});
+        }
     }catch(err){
         res.status(500).send("Couldn't Delete User");
     }
